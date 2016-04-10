@@ -1,0 +1,43 @@
+header li {
+	display: inline-block;
+	padding: 0 20px;
+}
+#main {
+	width: 665px;
+	background-color: green;
+	/* margin: auto; */
+}
+
+#map {
+	width: 500px;
+	height: 500px;
+	background-color: #eee;
+}
+
+#stats {
+	height: 500px;
+	width: 150px;
+	background-color: teal;
+}
+
+#log {
+	width: 500px;
+	height: 150px;
+	background-color: #ddd;
+}
+
+#controls {
+	width: 150px;
+	height: 150px;
+	text-align: center;
+	background-color: cyan;
+}
+
+#pixel {
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	display: inline-block;
+	background-color: tan;
+}
