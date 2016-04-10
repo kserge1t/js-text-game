@@ -1,4 +1,4 @@
-$(document).ready(function() {$('header').prepend("JS Start!");
+$(document).ready(function() {$('#log').append("<i>Debug info: JS started</i>");
 	player = "&nabla;"; // PLayer's location
 	battle = "&otimes;"; // Battle
 	unknown = "&loz;"; // Unknown location
@@ -9,7 +9,8 @@ $(document).ready(function() {$('header').prepend("JS Start!");
 	
 	for (i0=0;i0<gridSize[0];i0++) {
 		for (i1=0;i1<gridSize[1];i1++) {
-			$("#map").append("<div id='pixel' class='pix"+i0+"-"+i1+"'>"+none+"</div>");
+			grid[[i0],[i1]] = none;
+			$("#map").append("<div id='pixel' class='pix"+i0+"-"+i1+"'>"+grid[[i0],[i1]]+"</div>"); // Generate map
 		}
 	}
 	/* Player.setCoordinates(Math.round(gridSize[0]*0.2),Math.round(gridSize[1]*0.5)); */
@@ -17,27 +18,44 @@ $(document).ready(function() {$('header').prepend("JS Start!");
 	// Player object
 	var Player = {
 	  coordinates: [], // position of the player
-	  locationInfo: grid[[0],[0]],
+	  //locationInfo: grid[[0],[0]], 
 	  health: 1, // health % (1 = 100%)
 	  damage: [0.1,0.2], // from-to % (1 = 100%)
-	  accuracy: 0.5, // hit accuracy % (1 = 100%)
+	  accuracy: 0.8, // hit accuracy % (1 = 100%)
 	  aidKits: 1, // number of available aid kits
 	  setCoordinates: function(x,y) {
-		 switch (grid[[x][y]]) {
-			case none:
-				$("#log").append("<div>There is nothing here.</div>");
-				break;
-			case visited:
-				$("#log").append("<div>You previously visited this place.</div>");
-				break;
-			case unknown:
-				$("#log").append("<div>You found a new location! Explore it?</div>");
-				break;
-		 }
-		this.coordinates = [x,y];
-		this.getStats();
-		$(".pix"+x+"-"+y).replaceWith("<div id='pixel' class='pix"+x+"-"+y+"'>"+player+"</div>");
-		/* $(".pix0-0").replaceWith("<div id='pixel' class='pix"+x+"-"+y+"'>"+player+"</div>"); */
+		if (x>=0 && x<gridSize[0] && y>=0 && y<gridSize[1]) {
+			switch (grid[[x][y]]) {
+				case none:
+					$("#log").prepend("<div>There is nothing here.</div>");
+					break;
+				case visited:
+					$("#log").prepend("<div>You previously visited this place.</div>");
+					break;
+				case unknown:
+					$("#log").prepend("<div>You found a new location! Explore it?</div>");
+					break;
+			}
+			$(".pix"+this.coordinates[0]+"-"+this.coordinates[1]).replaceWith("<div id='pixel' class='pix"+this.coordinates[0]+"-"+this.coordinates[1]+"'>"+grid[[this.coordinates[0]],[this.coordinates[1]]]+"</div>");
+			$(".pix"+x+"-"+y).replaceWith("<div id='pixel' class='pix"+x+"-"+y+"'>"+player+"</div>");
+			this.coordinates = [x,y];
+			this.getStats();
+		}
+		else {
+			$("#log").prepend("<div>The path is blocked...</div>");
+		}
+	  },
+	  moveUp: function() {
+			  this.setCoordinates(this.coordinates[0]-1,this.coordinates[1])
+	  },
+	  moveDown: function() {
+			  this.setCoordinates(this.coordinates[0]+1,this.coordinates[1])
+	  },
+	  moveLeft: function() {
+			  this.setCoordinates(this.coordinates[0],this.coordinates[1]-1)
+	  },
+	  moveRight: function() {
+			  this.setCoordinates(this.coordinates[0],this.coordinates[1]+1)
 	  },
 	  getStats: function() {
 		 $("#stats").replaceWith(
@@ -68,9 +86,25 @@ $(document).ready(function() {$('header').prepend("JS Start!");
 	  this.damage = damage;
 	};
 	
-	Player.getStats();
-	/* Player.setCoordinates(5,5); */
+	/* Player.getStats(); */
+	$(document).keydown(function(e){
+		switch (e.keyCode) {
+			case 37:
+				Player.moveLeft();
+				break;
+			case 38:
+				Player.moveUp();
+				break;
+			case 39:
+				Player.moveRight();
+				break;
+			case 40:
+				Player.moveDown();
+				break;
+			default:
+				$("#log").prepend("<div>Invalid key</div>");
+				break;
+		}
+	});
 	
-	
-	
-$('header').append("JS End!");});
+$('#log').prepend("<i>Debug info: JS finished</i>");});
