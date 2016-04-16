@@ -14,54 +14,89 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+body {
+    font-size: 62.5%;
+}
+
+header {
+	text-align: center;
+}
 
 header li {
 	display: inline-block;
-	padding: 0 20px;
+	padding: 0em 1em;
+        font-size: 2em;
 }
+
+menuTop {
+	margin: auto;
+}
+
 #main {
-	width: 715px;
-	background-color: green;
-	/* margin: auto; */
+        /*width: 100%;*/
+	/*max-width: 100%;*/
+	/*width: 715px;*/
+        /*max-width: 90%;*/
+        /*height: 100px;*/
+	/*background-color: green;*/
+	margin: auto; 
 }
 
 #map {
-	width: 100%;
-	height: 520px;
-        overflow:scroll;
-	background-color: #eee;
+        /*width: 100px;*/
+        overflow: hidden;
+        white-space: nowrap;
+        border-radius: 1em;
+        /*padding: 5px;*/
+	background-color: grey;
 }
 
 #stats {
-	height: 520px;
-	width: 180px;
+	width: 140px;
+	/*height: 100%;*/
+        overflow: auto;
+        font-size: 1.6em;
+}
+
+#statsTd {
+        vertical-align: text-top;
+        border-radius: 1em;
+        padding: 1em 0.5em;
 	background-color: teal;
 }
 
 #log {
-	width: 520px;
-	height: 180px;
-	overflow:scroll;
-	background-color: #ddd;
+	/*width: 100%;*/
+        min-height: 115px;
+        max-height: 140px;
+        overflow: auto;
+        font-size: 1.6em;
+        border-radius: 1em;
+        padding: 0.6em;
+	background-color: black;
+        color: white;
 }
 
 #controls {
-	width: 180px;
-	height: 180px;
-	background-color: cyan;
+	background-color: #eee;
+        border-radius: 50%;
 }
 
 #navigation {
+/*    width: 130px;
+    height: 130px;*/
     margin:auto;
     text-align: center;
-    font-size: 48px;
+    font-size: 3em;
 }
 
 #pixel {
-	width: 20px;
-	height: 20px;
-	line-height: 20px;
+        width: 1.2em;
+	height: 1.2em;
+	/*line-height: 0em;*/
+        font-size: 2.1em;
 	text-align: center;
+        vertical-align: middle;
 	display: inline-block;
 	background-color: tan;
 }
