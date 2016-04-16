@@ -25,38 +25,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</head>
 	<body>
 		<header>
-			<div id="menu">
+			<div id="menuTop">
 				<ul>
 				<li>Start
 				<li>Restart
 				</ul>
 			</div>
 		</header>
-		<div id="main">
-			<table border="1">
+		<div>
+			<table id="main">
 				<tr>
-					<td><div id="map"></div></td>
-					<td><div id="stats"></div></td>
+                                    <td id="mapTd"><div id="map"></div></td>
+                                    <td id="statsTd"><div id="stats"></div></td>
 				</tr>
 				<tr>
-					<td><div id="log"></div></td>
-					<td>
-					<div id="controls">
+                                    <td id="logTd"><div id="log"></div></td>
+					<td id="controls">
+					<div>
                                             <table id="navigation">
                                                 <tr>
                                                     <td></td>
-                                                    <td>&#9650;</td>
+                                                    <td id="up">&#9650;</td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>&#9668;</td>
-                                                    <td>&nbsp;M&nbsp;</td>
-                                                    <td>&#9658;</td>
+                                                    <td id="left">&#9668;</td>
+                                                    <td id="menu">&nbsp;M&nbsp;</td>
+                                                    <td id="right">&#9658;</td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
-                                                    <td>&#9660;</td>
-                                                    <td>i</td>
+                                                    <td id="down">&#9660;</td>
+                                                    <td id="info">i</td>
                                                 </tr>
                                             </table>
 					</div>

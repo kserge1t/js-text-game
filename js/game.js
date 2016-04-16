@@ -17,7 +17,6 @@
 
 
 $(document).ready(function() {
-    console.log("JS started");
 
         // Html codes for special characters
         // "&#149;"; // •
@@ -45,32 +44,21 @@ $(document).ready(function() {
         var teleporterOneWay = "&#9737;"; // ☉ Teleporter1
         var teleporterRandom = "&#1758;"; // ۞ Teleporter2
 	var none = "&nbsp;"; // Blank location
-	var gridSize = [25,25]; // Grid/Map dimensions
+	var gridSize = [50,50]; // Grid/Map dimensions
 	var grid = []; // Map locations array
-
-        // Generate map
-	for (x=0;x<gridSize[0];x++) {
-            grid[x] = [];
-            for (y=0;y<gridSize[1];y++) {
-                grid[x][y] = none; // Empty map pixel
-		$("#map").append("<div id='pixel' class='pix"+x+"-"+y+"'>"+grid[x][y]+"</div>"); // Generate map location
-            }
-            $("#map").append("<br>");
-	}
         
+        // Proportional resize of game interface + calling recenter map
+        var resizing = function() {
+            $("#map").css("max-height",(($(window).height()-$("html").height()+$("#map").height())*0.98));
+            $("#map").css("max-width",(($(window).width()-$("#main").width()+$("#map").width())*0.98));
+            User.mapScroll();
+        };
+        
+        // Set object on map
         var setMap = function(x,y,type) {
             grid[x][y] = type; // What to put on the map
             $(".pix"+x+"-"+y).replaceWith("<div id='pixel' class='pix"+x+"-"+y+"'>"+grid[x][y]+"</div>"); // Generate map location
         };
-        
-        // Crete blocked area loop
-        for (i=0;i<grid[0].length;i++) {
-            setMap(i,Math.ceil((grid[0].length-1)*0.15),blocked); // Block area proportionally to map size
-        }
-        setMap(Math.ceil((grid.length-1)*0.05),Math.floor((grid[0].length-1)*0.95),teleporterOneWay); // Set teleporter one way, proportionally to map size
-        setMap(Math.floor((grid.length-1)*0.95),Math.ceil((grid[0].length-1)*0.05),teleporterRandom); // Set teleporter random, proportionally to map size
-        $("#log").prepend("<div>You woke up to find yourself in an unknown area... You have to find your way out of here!</div>");
-        
         
         // Weapons specifications
         var weaponSpecs = function(weapon) {
@@ -112,6 +100,32 @@ $(document).ready(function() {
             return Math.round(Math.random()*(max-min)+min);
         };
         
+        // Adjust/resize game interface opon window's resize
+        $( window ).resize(function() {
+            resizing();
+        });
+        
+        // Keybord keys navigation
+	$(document).keydown(function(e){
+		switch (e.keyCode) {
+			case 37:
+				User.moveLeft();
+				break;
+			case 38:
+				User.moveUp();
+				break;
+			case 39:
+				User.moveRight();
+				break;
+			case 40:
+				User.moveDown();
+				break;
+			default:
+				$("#log").prepend("<div>Invalid key</div>");
+				break;
+		}
+	});
+        
         // Player constructor (main user and enemies)
 	function Player(coordinates, hitPoints, aidKits, weapon) {
 	  this.hitPoints = hitPoints; // Initial hitpoints
@@ -128,17 +142,29 @@ $(document).ready(function() {
               this.weaponAccuracy = weapon[2];
               this.refreshStats(); // refresh player stats
           };
+          
           this.setCustomWeapon = function(name,damage,accuracy) {
               this.weaponType = name;
               this.weaponDamage = damage;
               this.weaponAccuracy = accuracy;
               this.refreshStats(); // refresh player stats
           };
+          
+          this.mapScroll = function() {
+              $("#map").scrollTop((this.coordinates[0]+1)*$("#pixel").height()-$("#map").height()/2);
+              $("#map").scrollLeft((this.coordinates[1]+1)*$("#pixel").width()-$("#map").width()/2);
+          };
+          
 	  this.setCoordinates = function(x,y) {
 		if (x>=0 && x<grid.length && y>=0 && y<grid[0].length && grid[x][y]!== blocked) {
 			$(".pix"+this.coordinates[0]+"-"+this.coordinates[1]).replaceWith("<div id='pixel' class='pix"+this.coordinates[0]+"-"+this.coordinates[1]+"'>"+grid[this.coordinates[0]][this.coordinates[1]]+"</div>"); // Remove user mark from previous location
 			$(".pix"+x+"-"+y).replaceWith("<div id='pixel' class='pix"+x+"-"+y+"'>"+user+"</div>"); // Add user mark to new location
 			this.coordinates = [x,y]; // apply the new coordinates
+                        
+                        // Scroll map
+                        this.mapScroll();
+                        
+                        
 			this.refreshStats(); // refresh player stats
 			switch (grid[x][y]) {
 				case visited:
@@ -150,12 +176,12 @@ $(document).ready(function() {
 				case teleporterOneWay:
 					$("#log").prepend("<div>You found a teleporter...</div>");
                                         if (confirm('Would you like to use the teleporter?')) {
-                                            return this.setCoordinates(Math.floor((grid.length-1)*0.05),Math.floor((grid[0].length-1)*0.05)); // Teleport to top-left area in the blocked area
+                                            return this.setCoordinates(Math.floor((grid.length-1)*0.05),Math.floor((grid[0].length-1)*0.05)); // Teleport to top-left area in the blocked section
                                         }
 					break;
 				case teleporterRandom:
-					$("#log").prepend("<div>You found another teleporter, this one looks damaged and unpredictable...</div>");
-                                        if (confirm('Would you like to use the damaged teleporter?')) {
+					$("#log").prepend("<div>You found abandoned teleporter, it looks old and unpredictable...</div>");
+                                        if (confirm('Would you like to use the abandoned teleporter?')) {
                                             var x, y;
                                             do {
                                                 x = Math.round(Math.random()*(grid.length-1));
@@ -187,18 +213,38 @@ $(document).ready(function() {
             $("#stats").replaceWith(
 			"<div id='stats'>"+
 			"<b><u>User Stats:</u></b>"+
-			"<br>Hit Points: "+this.hitPoints+
-			"<br>Aid Kits: "+this.aidKits+
-			"<br>Weapon: "+this.weaponType+
-			"<br>Damage: "+this.weaponDamage[0]+"-"+this.weaponDamage[1]+
-			"<br>Accuracy: "+this.weaponAccuracy+"%"+
-			"<br>Coordinates: "+this.coordinates+
+			"<br>Hit&nbsp;Points:&nbsp;"+this.hitPoints+
+			"<br>Aid&nbsp;Kits:&nbsp;"+this.aidKits+
+			"<br>Weapon:&nbsp;"+this.weaponType+
+			"<br>Damage:&nbsp;"+this.weaponDamage[0]+"-"+this.weaponDamage[1]+
+			"<br>Accuracy:&nbsp;"+this.weaponAccuracy+"%"+
+			"<br>Coordinates:&nbsp;"+this.coordinates+
 			"</div>"
             );
 	  };
           this.setWeapon(weapon); // Set initial weapon
           this.setCoordinates(coordinates[0],coordinates[1]); // Set initial coordinates
 	};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        // Generate map
+	for (x=0;x<gridSize[0];x++) {
+            grid[x] = [];
+            for (y=0;y<gridSize[1];y++) {
+                grid[x][y] = none; // Empty map pixel
+		$("#map").append("<div id='pixel' class='pix"+x+"-"+y+"'>"+grid[x][y]+"</div>"); // Generate map location
+            }
+            $("#map").append("<br>");
+	}
+        
+        // Crete blocked area
+        for (i=0;i<grid[0].length;i++) {
+            setMap(i,Math.ceil((grid[0].length-1)*0.15),blocked); // Block area proportionally to map size
+        }
+        setMap(Math.ceil((grid.length-1)*0.05),Math.floor((grid[0].length-1)*0.95),teleporterOneWay); // Set teleporter one way, proportionally to map size
+        setMap(Math.floor((grid.length-1)*0.95),Math.ceil((grid[0].length-1)*0.05),teleporterRandom); // Set teleporter random, proportionally to map size
+        $("#log").prepend("<div>You woke up to find yourself in an unknown area...<br>You have to find your way out of here!</div>");
 
 	// Create the main User Player
         var User = new Player(
@@ -207,26 +253,7 @@ $(document).ready(function() {
             1, // initial aid kits
             "fists" // initial weapon
         );
+
+        resizing(); // initial resize (must run after User creation)
         
-	$(document).keydown(function(e){
-		switch (e.keyCode) {
-			case 37:
-				User.moveLeft();
-				break;
-			case 38:
-				User.moveUp();
-				break;
-			case 39:
-				User.moveRight();
-				break;
-			case 40:
-				User.moveDown();
-				break;
-			default:
-				$("#log").prepend("<div>Invalid key</div>");
-				break;
-		}
-	});
-	
-console.log("JS finished");
 });
