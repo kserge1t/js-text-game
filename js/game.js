@@ -46,6 +46,7 @@ $(document).ready(function() {
 	var none = "&nbsp;"; // Blank location
 	var gridSize = [50,50]; // Grid/Map dimensions
 	var grid = []; // Map locations array
+        var scrollTimeout; // Timeout varriable
         
         // Proportional resize of game interface + calling recenter map
         var resizing = function() {
@@ -106,7 +107,7 @@ $(document).ready(function() {
         });
         
         // Keybord keys navigation
-	$(document).keydown(function(e){
+	$(document).keypress(function(e){
 		switch (e.keyCode) {
 			case 37:
 				User.moveLeft();
@@ -125,6 +126,27 @@ $(document).ready(function() {
 				break;
 		}
 	});
+        
+        // Virtual joystick navigation
+        $("#navigation").click(function(event){
+            switch (event.target.id) {
+			case "left":
+				User.moveLeft();
+				break;
+			case "up":
+				User.moveUp();
+				break;
+			case "right":
+				User.moveRight();
+				break;
+			case "down":
+				User.moveDown();
+				break;
+			case "center":
+				// Not implemented
+				break;
+            }
+        });
         
         // Player constructor (main user and enemies)
 	function Player(coordinates, hitPoints, aidKits, weapon) {
@@ -151,47 +173,53 @@ $(document).ready(function() {
           };
           
           this.mapScroll = function() {
-              $("#map").scrollTop((this.coordinates[0]+1)*$("#pixel").height()-$("#map").height()/2);
-              $("#map").scrollLeft((this.coordinates[1]+1)*$("#pixel").width()-$("#map").width()/2);
+                // Non-animated map scrolling
+//                $("#map").scrollTop((this.coordinates[0]+1)*$("#pixel").height()-$("#map").height()/2);
+//                $("#map").scrollLeft((this.coordinates[1]+1)*$("#pixel").width()-$("#map").width()/2);
+                $("#map").stop(true,true); // stop and complete previous animations
+                // Animated map scrolling
+                $("#map").animate({
+                    scrollTop: ((this.coordinates[0]+1)*$("#pixel").height()-$("#map").height()/2),
+                    scrollLeft: ((this.coordinates[1]+1)*$("#pixel").width()-$("#map").width()/2)
+                }, 300);
           };
           
 	  this.setCoordinates = function(x,y) {
 		if (x>=0 && x<grid.length && y>=0 && y<grid[0].length && grid[x][y]!== blocked) {
-			$(".pix"+this.coordinates[0]+"-"+this.coordinates[1]).replaceWith("<div id='pixel' class='pix"+this.coordinates[0]+"-"+this.coordinates[1]+"'>"+grid[this.coordinates[0]][this.coordinates[1]]+"</div>"); // Remove user mark from previous location
-			$(".pix"+x+"-"+y).replaceWith("<div id='pixel' class='pix"+x+"-"+y+"'>"+user+"</div>"); // Add user mark to new location
-			this.coordinates = [x,y]; // apply the new coordinates
-                        
-                        // Scroll map
-                        this.mapScroll();
-                        
-                        
-			this.refreshStats(); // refresh player stats
-			switch (grid[x][y]) {
-				case visited:
-					$("#log").prepend("<div>You previously visited this place.</div>");
-					break;
-				case unknown:
-					$("#log").prepend("<div>You found a new location!</div>");
-					break;
-				case teleporterOneWay:
-					$("#log").prepend("<div>You found a teleporter...</div>");
-                                        if (confirm('Would you like to use the teleporter?')) {
-                                            return this.setCoordinates(Math.floor((grid.length-1)*0.05),Math.floor((grid[0].length-1)*0.05)); // Teleport to top-left area in the blocked section
-                                        }
-					break;
-				case teleporterRandom:
-					$("#log").prepend("<div>You found abandoned teleporter, it looks old and unpredictable...</div>");
-                                        if (confirm('Would you like to use the abandoned teleporter?')) {
-                                            var x, y;
-                                            do {
-                                                x = Math.round(Math.random()*(grid.length-1));
-                                                y = Math.round(Math.random()*(grid[0].length-1));
-                                                $("#log").prepend("<div>"+grid[x][y]+"</div>");
-                                            } while (grid[x][y] !== none); // if randomly picked location is not empty, pick new location
-                                            return this.setCoordinates(x,y); // Teleport to random empty location on the map
-                                        }
-					break;
-			}
+                    $(".pix"+this.coordinates[0]+"-"+this.coordinates[1]).replaceWith("<div id='pixel' class='pix"+this.coordinates[0]+"-"+this.coordinates[1]+"'>"+grid[this.coordinates[0]][this.coordinates[1]]+"</div>"); // Remove user mark from previous location
+                    $(".pix"+x+"-"+y).replaceWith("<div id='pixel' class='pix"+x+"-"+y+"'>"+user+"</div>"); // Add user mark to new location
+                    this.coordinates = [x,y]; // apply the new coordinates
+
+                    // Scroll map
+                    this.mapScroll();
+
+                    this.refreshStats(); // refresh player stats
+                    switch (grid[x][y]) {
+                            case visited:
+                                    $("#log").prepend("<div>You previously visited this place.</div>");
+                                    break;
+                            case unknown:
+                                    $("#log").prepend("<div>You found a new location!</div>");
+                                    break;
+                            case teleporterOneWay:
+                                    $("#log").prepend("<div>You found a teleporter...</div>");
+                                    if (confirm('Would you like to use the teleporter?')) {
+                                        return this.setCoordinates(Math.floor((grid.length-1)*0.05),Math.floor((grid[0].length-1)*0.05)); // Teleport to top-left area in the blocked section
+                                    }
+                                    break;
+                            case teleporterRandom:
+                                    $("#log").prepend("<div>You found abandoned teleporter, it looks old and unpredictable...</div>");
+                                    if (confirm('Would you like to use the abandoned teleporter?')) {
+                                        var x, y;
+                                        do {
+                                            x = Math.round(Math.random()*(grid.length-1));
+                                            y = Math.round(Math.random()*(grid[0].length-1));
+                                            $("#log").prepend("<div>"+grid[x][y]+"</div>");
+                                        } while (grid[x][y] !== none); // if randomly picked location is not empty, pick new location
+                                        return this.setCoordinates(x,y); // Teleport to random empty location on the map
+                                    }
+                                    break;
+                    }
 		}
 		else {
 			$("#log").prepend("<div>The path is blocked...</div>");
