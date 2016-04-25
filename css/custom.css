@@ -19,106 +19,143 @@ body {
 }
 
 header {
-	text-align: center;
+    text-align: center;
 }
 
 header li {
-	display: inline-block;
-	padding: 0em 1em;
-        font-size: 2em;
-}
-
-menuTop {
-	margin: auto;
+    display: inline-block;
+    padding: 0em 1em;
+    font-size: 2em;
 }
 
 #main {
-        /*width: 100%;*/
-	/*max-width: 100%;*/
-	/*width: 715px;*/
-        /*max-width: 90%;*/
-        /*height: 100px;*/
-	/*background-color: green;*/
-	margin: auto; 
+    margin: auto; 
+}
+
+#map, #stats, #log, #controlls, #dialog {
+    border-radius: 1em;
+    box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.4);
+    padding: 0.4em;
 }
 
 #map {
-        /*width: 100px;*/
-        overflow: hidden;
-        white-space: nowrap;
-        border-radius: 1em;
-        /*padding: 5px;*/
-	background-color: tan;
-        box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.4);
-        -webkit-touch-callout: none; /* iOS Safari */
-        -webkit-user-select: none; /* Chrome/Safari/Opera */
-        -khtml-user-select: none; /* Konqueror */
-        -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* IE/Edge */
-        user-select: none; /* Standard syntax */
-}
-
-#stats {
-	width: 10.5em;
-	/*height: 100%;*/
-        overflow: auto;
-        font-size: 1.6em;
-}
-
-#statsTd {
-        vertical-align: text-top;
-        border-radius: 1em;
-        padding: 1em 0.5em;
-	background-color: teal;
-        box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.4);
-}
-
-#log {
-	/*width: 100%;*/
-        /*min-height: 115px;*/
-        height: 10em;
-        overflow: auto;
-        font-size: 1.6em;
-        border-radius: 1em;
-        padding: 0.6em;
-	background-color: black;
-        color: white;
-        box-shadow: 0 0.3em 0.5em 0 rgba(0,0,0,0.6);
-}
-
-#controls {
-        background: #bbb; /* For browsers that do not support gradients */
-        background: -webkit-radial-gradient(white, #aaa, black); /* Safari 5.1 to 6.0 */
-        background: -o-radial-gradient(white, #aaa, black); /* For Opera 11.6 to 12.0 */
-        background: -moz-radial-gradient(white, #aaa, black); /* For Firefox 3.6 to 15 */
-        background: radial-gradient(white, #aaa, black); /* Standard syntax */
-        border-radius: 50%;
-        border-style: solid;
-        border-width: 0.15em;
-        box-shadow: 0 0.4em 0.8em 0 rgba(0,0,0,0.8);
-        -webkit-touch-callout: none; /* iOS Safari */
-        -webkit-user-select: none; /* Chrome/Safari/Opera */
-        -khtml-user-select: none; /* Konqueror */
-        -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* IE/Edge */
-        user-select: none; /* Standard syntax */
-}
-
-#navigation {
-/*    width: 130px;
-    height: 130px;*/
-    margin:auto;
-    text-align: center;
-    font-size: 5em;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: tan;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none; /* Standard syntax */
 }
 
 #pixel {
-        width: 1.23em;
-	height: 1.23em;
-	/*line-height: 0em;*/
-        font-size: 3em;
-	text-align: center;
-        vertical-align: middle;
-	display: inline-block;
-	background-color: tan;
+    height: 1.23em;
+    width: 1.23em;
+    font-size: 3em;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    background-color: tan;
+}
+
+#stats {
+    /*width: 10em;*/
+    overflow: auto;
+    font-size: 1.6em;
+    vertical-align: text-top;
+    background-color: mediumturquoise;
+}
+
+#user, #enemy {
+    /*stats updated via js*/
+}
+
+#log {
+    height: 10em;
+    max-height: 30%;
+    overflow: auto;
+    font-size: 1.6em;
+    background-color: black;
+    color: limegreen;
+}
+
+#controls, #center {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 0.15em;
+    margin: 0.3em;
+    background: #aaa; /* For browsers that do not support gradients */
+    background: -webkit-radial-gradient(whitesmoke, #999, black); /* Safari 5.1 to 6.0 */
+    background: -o-radial-gradient(whitesmoke, #999, black); /* For Opera 11.6 to 12.0 */
+    background: -moz-radial-gradient(whitesmoke, #999, black); /* For Firefox 3.6 to 15 */
+    background: radial-gradient(whitesmoke, #999, black); /* Standard syntax */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none; /* Standard syntax */
+}
+
+#controlsTable {
+    margin: auto;
+    text-align: center;
+    font-size: 4em;
+}
+
+#overlay, #dialog {
+    display: none;
+    position: absolute;
+}
+
+#overlay {
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index:1001;
+    -moz-opacity: 0.6;
+    opacity:.6;
+    filter: alpha(opacity=60);
+}
+
+#dialog {
+    /*top: 20%;*/
+    /*left: 20%;*/
+    max-width: 60%;
+    max-height: 60%;
+    padding: 1em;
+    border: 0.5em solid orange;
+    background-color: #eee;
+    z-index:1002;
+    text-align: center;
+    /*color: white;*/
+    overflow: auto;
+}
+
+#inquiry {
+    display: inline-block;
+    margin: 0 0 0.8em 0;
+    font-size: 2em;
+    text-align: justify;
+}
+
+#accept, #reject {
+    display: inline-block;
+    font-size: 3em;
+    margin: 0.2em 0.4em;
+    padding: 0.3em 0.5em;
+    background-color: dodgerblue;
+    border-radius: 0.5em;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none; /* Standard syntax */
 }
